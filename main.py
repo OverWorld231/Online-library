@@ -1,5 +1,6 @@
 import requests
 import os
+from time import sleep
 from bs4 import BeautifulSoup
 from pathvalidate import sanitize_filename
 from urllib.parse import urljoin, urlsplit
@@ -71,9 +72,13 @@ def main():
             filename = about_book["title"].strip()
             download_image(about_book["full_image_url"])
             download_txt(url, filename, book_id)
-        except:
+        except requests.exceptions.HTTPError:
             print("Книга не найдена")
+        except requests.exceptions.ConnectionError:
+            print("Повторное подключение к серверу")
+            sleep(20)
 
 
 if __name__ == "__main__":
     main()
+
