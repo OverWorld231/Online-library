@@ -42,8 +42,7 @@ def parse_book_page(response, book_url):
     book_image_url = soup.find("div", class_="bookimage").find("img")["src"]
     full_image_url = urljoin(book_url, book_image_url)
     book_comments = soup.find_all("div", class_="texts")
-    for book_comment in book_comments:
-        comments = book_comment.find("span", class_="black").text
+    comments = [book_comment.find("span", class_="black").text for book_comment in book_comments]
     book_genres = soup.find("span", class_="d_book").find_all("a")
     genres = [genre.text for genre in book_genres]
     about_book = {
