@@ -12,9 +12,8 @@ def check_for_redirect(response):
 
 
 def download_txt(url, filename, book_id, folder="books/"):
-    params = {"id":book_id}
-    if not os.path.exists(folder):
-        os.makedirs(folder)
+    params = {"id":book_id} 
+    os.makedirs(folder, exist_ok=True)
     response = requests.get(url, params=params)
     response.raise_for_status()
     check_for_redirect(response)
@@ -24,8 +23,7 @@ def download_txt(url, filename, book_id, folder="books/"):
 
 
 def download_image(url, folder="images/"):
-    if not os.path.exists(folder):
-        os.makedirs(folder)
+    os.makedirs(folder, exist_ok=True)
     response = requests.get(url)
     response.raise_for_status()
     check_for_redirect(response)
