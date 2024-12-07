@@ -81,8 +81,8 @@ def main():
     parser.add_argument("--start_page", type=int, default=1, help="Номер начальной книги")
     parser.add_argument("--end_page", type=int, default=702, help="Номер последней книги")
     parser.add_argument("--dest_folder", type=str, default="media", help="Путь к каталогу с результатами парсинга: картинкам, книгам, JSON.")
-    parser.add_argument("--skip_imgs", action="store_true", help="Пропускает скачку изображение")
-    parser.add_argument("--skip_txt", action="store_true",  help="Пропускает скачку текста")
+    parser.add_argument("--skip_imgs", action="store_true", help="Пропускает скачивание изображение")
+    parser.add_argument("--skip_txt", action="store_true",  help="Пропускает скачивание текста")
     args = parser.parse_args()
     all_book_parameters = []
     book_urls, book_numbers = get_category_url(args.start_page, args.end_page)
