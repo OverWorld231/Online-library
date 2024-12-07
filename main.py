@@ -7,28 +7,37 @@ from urllib.parse import urljoin, urlsplit
 import argparse
 import json
 
+
 def check_for_redirect(response):
     if response.history:
         raise requests.exceptions.HTTPError
+
 
 def get_category_book_urls(start_page, end_page):
     all_books_urls = []
     all_number_books = []
     for number in range(start_page,end_page):
-        tululu_url =  f"https://tululu.org/l55/{number}"
-        response = requests.get(tululu_url)
-        response.raise_for_status()
-        check_for_redirect(response)
-        soup = BeautifulSoup(response.text, "html.parser")
-        book_selector = "table.d_book"
-        book_urls = soup.select(book_selector)
-        for book_url in book_urls:
-            url = book_url.find("a")["href"]
-            full_url = urljoin(tululu_url,url)
-            split_url = urlsplit(url).path.split("/")[1]
-            all_books_urls.append(full_url)
-            all_number_books.append(split_url)
+        try:
+            tululu_url =  f"https://tululu.org/l55/{number}"
+            response = requests.get(tululu_url)
+            response.raise_for_status()
+            check_for_redirect(response)
+            soup = BeautifulSoup(response.text, "html.parser")
+            book_selector = "table.d_book"
+            book_urls = soup.select(book_selector)
+            for book_url in book_urls:
+                url = book_url.find("a")["href"]
+                full_url = urljoin(tululu_url,url)
+                split_url = urlsplit(url).path.split("/")[1]
+                all_books_urls.append(full_url)
+                all_number_books.append(split_url)
+        except requests.exceptions.HTTPError:
+            print("Книга не найдена")
+        except requests.exceptions.ConnectionError:
+            print("Ошибка соединения. Повторное подключение...")
+            sleep(20)
     return all_books_urls, all_number_books
+
 
 def download_txt(url, filename, book_id, folder="books/"):
     params = {"id":book_id} 
@@ -73,6 +82,7 @@ def parse_book_page(response, book_url):
         "comments": comments,
     }
     return about_book
+
 
 def main():
     parser = argparse.ArgumentParser(
