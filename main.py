@@ -11,7 +11,7 @@ def check_for_redirect(response):
     if response.history:
         raise requests.exceptions.HTTPError
 
-def get_category_url(start_page, end_page):
+def get_category_book_urls(start_page, end_page):
     all_books_urls = []
     all_number_books = []
     for number in range(start_page,end_page):
@@ -85,7 +85,7 @@ def main():
     parser.add_argument("--skip_txt", action="store_true",  help="Пропускает скачивание текста")
     args = parser.parse_args()
     all_book_parameters = []
-    book_urls, book_numbers = get_category_url(args.start_page, args.end_page)
+    book_urls, book_numbers = get_category_book_urls(args.start_page, args.end_page)
     for book_url, book_number in zip(book_urls, book_numbers):
         try:
             url = f"https://tululu.org/txt.php"
